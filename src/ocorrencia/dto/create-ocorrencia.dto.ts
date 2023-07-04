@@ -3,5 +3,4 @@ export class CreateOcorrenciaDto {
   titulo: string;
   usuario_id: string;
   dataOcorrencia: Date;
-  fotos?: Express.Multer.File[];
 }

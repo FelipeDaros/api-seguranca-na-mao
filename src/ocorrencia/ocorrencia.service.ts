@@ -9,33 +9,22 @@ export class OcorrenciaService {
   public async create({
     dataOcorrencia,
     descricao,
-    fotos,
     usuario_id,
     titulo,
   }: CreateOcorrenciaDto) {
-    const possuiFoto = fotos.length >= 1;
     try {
       const createOcorrencia =
         await this.prismaService.registroOcorrencia.create({
           data: {
             dataOcorrencia,
             descricao,
-            possuiFoto,
+            possuiFoto: false,
             usuario_id,
             titulo,
             status: 'ABERTO',
           },
         });
-
-      for await (const foto of fotos) {
-        await this.prismaService.fotosOcorrencia.create({
-          data: {
-            nomeArquivo: foto.filename,
-            registro_ocorrencia_id: createOcorrencia.id,
-            url: foto.path,
-          },
-        });
-      }
+      return createOcorrencia;
     } catch (error) {
       console.log(error);
       throw new BadRequestException('Não foi possível salvar a ocorrência');
@@ -43,11 +32,18 @@ export class OcorrenciaService {
   }
 
   public async findAll() {
-    const occorrencias = await this.prismaService.registroOcorrencia.findMany({
-      include: { FotosOcorrencia: true, User: true },
-    });
+    try {
+      const occorrencias = await this.prismaService.registroOcorrencia.findMany(
+        {
+          include: { FotosOcorrencia: true, User: true },
+        },
+      );
 
-    return occorrencias;
+      return occorrencias;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   }
 
   public async findOne(id: number) {

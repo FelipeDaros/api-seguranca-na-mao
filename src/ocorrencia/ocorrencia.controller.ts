@@ -8,12 +8,14 @@ import {
   Delete,
   UseInterceptors,
   UploadedFiles,
+  UseGuards,
 } from '@nestjs/common';
 import { OcorrenciaService } from './ocorrencia.service';
 import { CreateOcorrenciaDto } from './dto/create-ocorrencia.dto';
 import { UpdateOcorrenciaDto } from './dto/update-ocorrencia.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from './multerConfig';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('ocorrencia')
 export class OcorrenciaController {
@@ -25,10 +27,11 @@ export class OcorrenciaController {
     @UploadedFiles() files: Express.Multer.File[],
     @Body() createOcorrenciaDto: CreateOcorrenciaDto,
   ) {
-    createOcorrenciaDto.fotos = files;
+    //createOcorrenciaDto.fotos = files;
     return await this.ocorrenciaService.create(createOcorrenciaDto);
   }
 
+  @UseGuards(AuthGuard("jwt"))
   @Get()
   findAll() {
     return this.ocorrenciaService.findAll();
