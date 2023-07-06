@@ -2,16 +2,22 @@ import { Injectable } from '@nestjs/common';
 import { CreateServicoDto } from './dto/create-servico.dto';
 import { UpdateServicoDto } from './dto/update-servico.dto';
 import { PrismaService } from 'src/prisma.service';
+import { ChecklistService } from 'src/checklist/checklist.service';
+import { Servico } from '@prisma/client';
 
 @Injectable()
 export class ServicoService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly checklistService: ChecklistService,
+  ) {}
   public async create({
     empresa_id,
     posto_id,
     relatorio_lido,
     usuario_id,
-  }: CreateServicoDto) {
+    equipamentos_post_id,
+  }: CreateServicoDto): Promise<Servico> {
     const servico = await this.prismaService.servico.create({
       data: {
         empresa_id,
@@ -21,11 +27,32 @@ export class ServicoService {
       },
     });
 
-    return servico;
+    await this.checklistService.create({
+      equipamentos_post_id,
+      posto_id,
+      servico_id: servico.id,
+      usuario_id,
+    });
+
+    const servicoCriado = {
+      ...servico,
+      equipamentos_post_id,
+    };
+
+    return servicoCriado;
   }
 
-  public async findAll() {
-    return `This action returns all servico`;
+  public async findAll(): Promise<Array<Servico>> {
+    const servicos = await this.prismaService.servico.findMany({
+      include: {
+        Checklist: true,
+        Empresa: true,
+        User: true,
+        Posto: true,
+      },
+    });
+
+    return servicos;
   }
 
   public async findOne(id: number) {

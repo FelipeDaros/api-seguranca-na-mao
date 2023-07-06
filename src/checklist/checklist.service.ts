@@ -27,28 +27,4 @@ export class ChecklistService {
       throw new BadRequestException(error.message);
     }
   }
-
-  public async findAll() {
-    const checklists = await this.prismaService.checklist.findMany();
-
-    return checklists;
-  }
-
-  public async findOne(id: number) {
-    const checklist = await this.prismaService.checklist.findFirst({
-      where: {
-        id,
-      },
-    });
-
-    return checklist;
-  }
-
-  update(id: number, updateChecklistDto: UpdateChecklistDto) {
-    return `This action updates a #${id} checklist`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} checklist`;
-  }
 }
