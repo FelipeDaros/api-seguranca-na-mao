@@ -13,6 +13,7 @@ import { PanicoModule } from './panico/panico.module';
 import { PontoModule } from './ponto/ponto.module';
 import { OcorrenciaModule } from './ocorrencia/ocorrencia.module';
 import { AuthModule } from './auth/auth.module';
+import { GerarRondasModule } from './gerar-rondas/gerar-rondas.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AuthModule } from './auth/auth.module';
     PontoModule,
     OcorrenciaModule,
     AuthModule,
+    GerarRondasModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

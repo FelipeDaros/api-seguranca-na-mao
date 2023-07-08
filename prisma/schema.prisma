@@ -16,13 +16,18 @@ model Usuario {
   senha              String
   email              String
   created_at         DateTime             @default(now())
+  Posto              Posto?               @relation(fields: [posto_id], references: [id])
+  posto_id           Int?
   updated_at         DateTime?
+  isAdmin            Boolean              @default(false)
   ultimoLogin        DateTime             @map("ultimo_login")
   estaLogado         Boolean              @map("esta_logado")
   Panico             Panico[]
   Servico            Servico[]
   RegistroOcorrencia RegistroOcorrencia[]
   Checklist          Checklist[]
+  GerarRondas        GerarRondas[]
+  Alerta             Alerta[]
 
   @@map("usuario")
 }
@@ -66,6 +71,8 @@ model Posto {
   Ponto             Ponto[]
   EquipamentosPosto EquipamentosPosto[]
   Checklist         Checklist[]
+  GerarRondas       GerarRondas[]
+  Usuario           Usuario[]
 
   @@map("posto")
 }
@@ -158,4 +165,23 @@ model Checklist {
   equipamentos_post_id Int?
 
   @@map("checklist")
+}
+
+model GerarRondas {
+  id             Int       @id @default(autoincrement())
+  User           Usuario?  @relation(fields: [usuario_id], references: [id])
+  usuario_id     String
+  verificado     Boolean?  @default(false)
+  atrasado       Boolean?  @default(false)
+  Posto          Posto?    @relation(fields: [posto_id], references: [id])
+  posto_id       Int
+  created_at     DateTime  @default(now())
+  maximo_horario DateTime?
+}
+
+model Alerta {
+  id         Int      @id @default(autoincrement())
+  User       Usuario? @relation(fields: [usuario_id], references: [id])
+  usuario_id String
+  created_at DateTime @default(now())
 }
