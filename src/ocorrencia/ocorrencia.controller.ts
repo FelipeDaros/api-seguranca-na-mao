@@ -16,7 +16,7 @@ import { UpdateOcorrenciaDto } from './dto/update-ocorrencia.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from './multerConfig';
 import { AuthGuard } from '@nestjs/passport';
-
+@UseGuards(AuthGuard('jwt'))
 @Controller('ocorrencia')
 export class OcorrenciaController {
   constructor(private readonly ocorrenciaService: OcorrenciaService) {}
@@ -31,7 +31,6 @@ export class OcorrenciaController {
     return await this.ocorrenciaService.create(createOcorrenciaDto);
   }
 
-  @UseGuards(AuthGuard("jwt"))
   @Get()
   findAll() {
     return this.ocorrenciaService.findAll();

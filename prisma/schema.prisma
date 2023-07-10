@@ -119,8 +119,9 @@ model Ponto {
   Posto     Posto? @relation(fields: [posto_id], references: [id])
   posto_id  Int
 
-  created_at DateTime  @default(now())
-  updated_at DateTime?
+  created_at  DateTime      @default(now())
+  updated_at  DateTime?
+  GerarRondas GerarRondas[]
 
   @@map("ponto")
 }
@@ -177,6 +178,11 @@ model GerarRondas {
   posto_id       Int
   created_at     DateTime  @default(now())
   maximo_horario DateTime?
+
+  Ponto    Ponto? @relation(fields: [ponto_id], references: [id])
+  ponto_id Int
+
+  @@map("gerar_rondas")
 }
 
 model Alerta {
@@ -184,4 +190,6 @@ model Alerta {
   User       Usuario? @relation(fields: [usuario_id], references: [id])
   usuario_id String
   created_at DateTime @default(now())
+
+  @@map("alerta")
 }

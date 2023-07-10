@@ -22,7 +22,6 @@ export class UsuariosController {
     return this.usuariosService.create(createUsuarioDto);
   }
 
-  @UseGuards(AuthGuard("jwt"))
   @Get()
   public async findAll() {
     return this.usuariosService.findAll();

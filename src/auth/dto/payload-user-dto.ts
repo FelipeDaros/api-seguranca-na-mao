@@ -6,6 +6,7 @@ export class PayloadUser {
   email: string;
   created_at: Date;
   ultimoLogin: Date;
+  isAdmin: boolean;
 
   constructor(user: Usuario) {
     this.id = user.id;
@@ -13,5 +14,6 @@ export class PayloadUser {
     this.email = user.email;
     this.created_at = user.created_at;
     this.ultimoLogin = user.ultimoLogin;
+    this.isAdmin = user.isAdmin;
   }
 }
