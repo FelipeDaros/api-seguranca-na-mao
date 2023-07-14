@@ -32,13 +32,13 @@ export class EquipamentosPostoService {
     }
   }
 
-  public async findAll(postoServicoid: number) {
+  public async findAll(posto_id: number) {
     const equipamentosPosto =
       await this.prismaService.equipamentosPosto.findMany({
         where: {
-          posto_id: postoServicoid,
+          posto_id,
         },
-        include: { Equipamentos: true, Posto: true },
+        include: { Equipamentos: true },
       });
 
     return equipamentosPosto;

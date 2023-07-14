@@ -7,6 +7,7 @@ export class PayloadUser {
   created_at: Date;
   ultimoLogin: Date;
   isAdmin: boolean;
+  empresa_id: number;
 
   constructor(user: Usuario) {
     this.id = user.id;
@@ -15,5 +16,6 @@ export class PayloadUser {
     this.created_at = user.created_at;
     this.ultimoLogin = user.ultimoLogin;
     this.isAdmin = user.isAdmin;
+    this.empresa_id = user.empresa_id;
   }
 }

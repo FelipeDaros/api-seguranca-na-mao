@@ -22,9 +22,9 @@ export class EquipamentosPostoController {
     return this.equipamentosPostoService.create(createEquipamentosPostoDto);
   }
 
-  @Get(':postoServicoid')
-  findAll(@Param('postoServicoid') postoServicoid: string) {
-    return this.equipamentosPostoService.findAll(+postoServicoid);
+  @Get('/listar-equipamentos/:posto_id')
+  findAll(@Param('posto_id') posto_id: string) {
+    return this.equipamentosPostoService.findAll(+posto_id);
   }
 
   @Get(':id')

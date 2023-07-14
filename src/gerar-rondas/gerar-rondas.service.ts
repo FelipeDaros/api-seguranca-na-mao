@@ -9,16 +9,13 @@ export class GerarRondasService {
   constructor(private readonly prismaService: PrismaService) {}
 
   public async create(usuario_id: string): Promise<void> {
+    let repeticoes = 0;
     const verificado = await this.verificarTodosVerificadosUsuario(usuario_id);
 
     if (!verificado) {
       throw new BadRequestException('Você precisa felizar sua ronda iniciada');
     }
 
-    // eslint-disable-next-line no-var
-    var data_criacao = moment().toDate();
-    // eslint-disable-next-line no-var
-    var repeticoes = 0;
     const { posto_id } = await this.prismaService.usuario.findUnique({
       where: {
         id: usuario_id,
@@ -74,6 +71,10 @@ export class GerarRondasService {
       ...rondaSelecionada,
       verificado: true,
     };
+
+    if (moment().toDate() >= rondaAlterada.maximo_horario) {
+      rondaAlterada.atrasado = true;
+    }
 
     const data = await this.prismaService.gerarRondas.update({
       data: rondaAlterada,

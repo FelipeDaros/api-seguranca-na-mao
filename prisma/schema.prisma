@@ -11,23 +11,24 @@ datasource db {
 }
 
 model Usuario {
-  id                 String               @id @default(uuid())
-  nome               String
-  senha              String
-  email              String
-  created_at         DateTime             @default(now())
-  Posto              Posto?               @relation(fields: [posto_id], references: [id])
-  posto_id           Int?
-  updated_at         DateTime?
-  isAdmin            Boolean              @default(false)
-  ultimoLogin        DateTime             @map("ultimo_login")
-  estaLogado         Boolean              @map("esta_logado")
-  Panico             Panico[]
-  Servico            Servico[]
-  RegistroOcorrencia RegistroOcorrencia[]
-  Checklist          Checklist[]
-  GerarRondas        GerarRondas[]
-  Alerta             Alerta[]
+  id                  String                @id @default(uuid())
+  nome                String
+  senha               String
+  email               String
+  created_at          DateTime              @default(now())
+  Posto               Posto?                @relation(fields: [posto_id], references: [id])
+  posto_id            Int?
+  updated_at          DateTime?
+  isAdmin             Boolean               @default(false)
+  ultimoLogin         DateTime              @map("ultimo_login")
+  estaLogado          Boolean               @map("esta_logado")
+  empresa_id          Int?
+  Panico              Panico[]
+  Servico             Servico[]
+  RegistroOcorrencia  RegistroOcorrencia[]
+  Checklist           Checklist[]
+  GerarRondas         GerarRondas[]
+  Alerta              Alerta[]
 
   @@map("usuario")
 }
@@ -42,37 +43,19 @@ model Empresa {
 
   @@map("empresa")
 }
-
-model Servico {
-  id         Int      @id @default(autoincrement())
-  User       Usuario? @relation(fields: [usuario_id], references: [id])
-  usuario_id String
-
-  Empresa    Empresa? @relation(fields: [empresa_id], references: [id])
-  empresa_id Int
-
-  Posto    Posto? @relation(fields: [posto_id], references: [id])
-  posto_id Int
-
-  relatorioLido Boolean?    @map("relatorio_lido")
-  Checklist     Checklist[]
-
-  @@map("servico")
-}
-
 model Posto {
-  id                Int                 @id @default(autoincrement())
-  nome              String
-  Empresa           Empresa?            @relation(fields: [empresa_id], references: [id])
-  empresa_id        Int
-  created_at        DateTime            @default(now())
-  updated_at        DateTime?
-  Servico           Servico[]
-  Ponto             Ponto[]
-  EquipamentosPosto EquipamentosPosto[]
-  Checklist         Checklist[]
-  GerarRondas       GerarRondas[]
-  Usuario           Usuario[]
+  id                  Int                   @id @default(autoincrement())
+  nome                String
+  Empresa             Empresa?              @relation(fields: [empresa_id], references: [id])
+  empresa_id          Int
+  created_at          DateTime              @default(now())
+  updated_at          DateTime?
+  Servico             Servico[]
+  Ponto               Ponto[]
+  EquipamentosPosto   EquipamentosPosto[]
+  Checklist           Checklist[]
+  GerarRondas         GerarRondas[]
+  Usuario             Usuario[]
 
   @@map("posto")
 }
@@ -84,8 +67,8 @@ model EquipamentosPosto {
   Posto          Posto?        @relation(fields: [posto_id], references: [id])
   posto_id       Int
 
-  created_at DateTime    @default(now())
-  Checklist  Checklist[]
+  created_at          DateTime              @default(now())
+  Checklist           Checklist[]
 
   @@map("equipamentos_posto")
 }
@@ -192,4 +175,21 @@ model Alerta {
   created_at DateTime @default(now())
 
   @@map("alerta")
+}
+
+model Servico {
+  id         Int      @id @default(autoincrement())
+  User       Usuario? @relation(fields: [usuario_id], references: [id])
+  usuario_id String
+
+  Empresa    Empresa? @relation(fields: [empresa_id], references: [id])
+  empresa_id Int
+
+  Posto    Posto? @relation(fields: [posto_id], references: [id])
+  posto_id Int
+
+  relatorioLido Boolean?    @map("relatorio_lido")
+  Checklist     Checklist[]
+
+  @@map("servico")
 }
