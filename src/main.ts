@@ -5,8 +5,10 @@ import * as moment from 'moment';
 
 async function bootstrap() {
   moment.tz.setDefault('America/Sao_Paulo');
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    cors: true,
+  });
   dotenv.config();
-  await app.listen(3000);
+  await app.listen(3005);
 }
 bootstrap();

@@ -1,7 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Res,
+} from '@nestjs/common';
 import { PontoService } from './ponto.service';
 import { CreatePontoDto } from './dto/create-ponto.dto';
 import { UpdatePontoDto } from './dto/update-ponto.dto';
+import * as fs from 'fs-extra';
+import * as PDFDocument from 'pdfkit';
+import * as QRCODE from 'qrcode';
 
 @Controller('ponto')
 export class PontoController {
@@ -15,6 +27,24 @@ export class PontoController {
   @Get()
   findAll() {
     return this.pontoService.findAll();
+  }
+
+  @Get('/paginacao')
+  public async findAllWithPagination() {
+    return await this.pontoService.findAllWithPagination();
+  }
+
+  @Post('/imprimir/:id')
+  async downloadPDF(@Param('id') id: string, @Res() res): Promise<void> {
+    const buffer = await this.pontoService.generarPDF(+id);
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename=example.pdf',
+      'Content-Length': buffer.length,
+    });
+
+    res.end(buffer);
   }
 
   @Get(':id')

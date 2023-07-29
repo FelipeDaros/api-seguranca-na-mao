@@ -45,10 +45,17 @@ export class ServicoService {
   public async findAll(): Promise<Array<Servico>> {
     const servicos = await this.prismaService.servico.findMany({
       include: {
-        Checklist: true,
-        Empresa: true,
-        User: true,
-        Posto: true,
+        Checklist: {
+          include: {
+            EquipamentosPosto: true
+          }
+        },
+        // Empresa: true,
+        // User: true,
+        // Posto: true,
+      },
+      orderBy: {
+        id: 'desc',
       },
     });
 
