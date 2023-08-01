@@ -13,9 +13,7 @@ export interface IDataMessage {
 @Injectable()
 export class AppService {
   private client: Client;
-  constructor() {
-    this.client = new Client(process.env.APPID, process.env.RESTAPIKEY);
-  }
+  constructor() {}
 
   public async sendPushNotifications({
     centroDecustoIds,
