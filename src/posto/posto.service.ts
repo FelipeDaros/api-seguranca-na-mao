@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreatePostoServicoDto } from './dto/create-posto-servico.dto';
 import { UpdatePostoServicoDto } from './dto/update-posto-servico.dto';
 import { PrismaService } from 'src/prisma.service';
+import * as moment from 'moment';
 
 @Injectable()
 export class PostoService {
@@ -35,6 +36,7 @@ export class PostoService {
         data: {
           equipamento_id: equipament,
           posto_id: postoServicoCreated.id,
+          created_at: moment().add(-3, 'hours').toDate()
         },
       });
     }

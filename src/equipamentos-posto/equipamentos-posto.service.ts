@@ -38,7 +38,12 @@ export class EquipamentosPostoService {
         where: {
           posto_id,
         },
-        include: { Equipamentos: true },
+        include: { Equipamentos: {
+          select: {
+            id: true,
+            nome: true
+          }
+        } },
       });
 
     return equipamentosPosto;
@@ -50,6 +55,14 @@ export class EquipamentosPostoService {
         where: {
           id,
         },
+        include: {
+          Equipamentos: {
+            select: {
+              id: true,
+              nome: true,
+            }
+          }
+        }
       });
 
     if (!equipamentoPosto) {

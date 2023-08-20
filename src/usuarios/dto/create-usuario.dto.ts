@@ -4,4 +4,6 @@ export class CreateUsuarioDto {
   nome: string;
   senha: string;
   email: string;
+  posto_id: number;
+  empresa_id: number;
 }

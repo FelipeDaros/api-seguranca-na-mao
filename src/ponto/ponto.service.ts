@@ -5,10 +5,13 @@ import { PrismaService } from 'src/prisma.service';
 import PDFDocumentWithTables from 'pdfkit-table';
 import * as QRCODE from 'qrcode';
 import * as fs from 'fs-extra';
+import { MailService } from 'src/mail/mail.service';
+import * as moment from 'moment';
+
 
 @Injectable()
 export class PontoService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService, private readonly mailService: MailService) { }
   public async create({ latitude, longitude, nome, posto_id }: CreatePontoDto) {
     const pontoExistente = await this.prismaService.ponto.findFirst({
       where: {
@@ -22,7 +25,7 @@ export class PontoService {
     }
 
     const ponto = await this.prismaService.ponto.create({
-      data: { latitude, longitude, nome: nome.toLowerCase(), posto_id },
+      data: { latitude, longitude, nome: nome.toLowerCase(), posto_id, created_at: moment().add(-3, 'hours').toDate() },
     });
 
     return ponto;
@@ -46,17 +49,20 @@ export class PontoService {
     }
 
     // Gerar e salvar a imagem do QR Code
-    await this.gerarQRCode(nome);
+    const { data } = await this.gerarQRCode(nome);
 
     // Gerar o PDF com o QR Code
     const pdfBuffer: Buffer = await this.gerarPDFComQRCode(nome);
 
+    await this.mailService.enviarEmailPontoCriado(data);
+
     return pdfBuffer;
   }
 
-  private async gerarQRCode(nome: string): Promise<void> {
+  private async gerarQRCode(nome: string): Promise<any> {
     try {
-      await QRCODE.toFile(`./src/qrcode/${nome}.png`, nome);
+      const foto = await QRCODE.toFile(`./src/qrcode/${nome}.png`, nome);
+      return foto;
     } catch (err) {
       throw new Error('Erro ao gerar o código QR: ' + err.message);
     }

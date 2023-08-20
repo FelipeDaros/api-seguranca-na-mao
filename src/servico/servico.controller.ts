@@ -28,15 +28,6 @@ export class ServicoController {
     return await this.servicoService.findAll();
   }
 
-  @Get('/buscar-relatorio-ultimo-vigilante-do-posto/:posto_id')
-  public async buscarRelatorioUltimoVigilanteDoPosto(
-    @Param('posto_id') posto_id: string,
-  ) {
-    return await this.servicoService.buscarRelatorioUltimoVigilanteDoPosto(
-      +posto_id,
-    );
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.servicoService.findOne(+id);

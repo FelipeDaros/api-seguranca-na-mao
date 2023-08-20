@@ -2,37 +2,57 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { PrismaService } from 'src/prisma.service';
+import { MailService } from 'src/mail/mail.service';
+import { emailRegex } from 'src/utils/emailRegex';
+import * as moment from 'moment';
 
 @Injectable()
 export class UsuariosService {
-  constructor(private readonly prismaService: PrismaService) {}
-  public async create({ email, nome, senha }: CreateUsuarioDto) {
+  constructor(private readonly prismaService: PrismaService, private readonly mailService: MailService) { }
+
+  public async create({ email, nome, senha, posto_id, empresa_id }: CreateUsuarioDto) {
     const usuarioExiste = await this.prismaService.usuario.findFirst({
       where: {
         email,
       },
     });
 
+    if(!emailRegex(email)){
+      throw new BadRequestException('O endereço de email fornecido não é válido');
+    }
+
     if (usuarioExiste) {
       throw new BadRequestException('Usuario já existe na base');
     }
 
-    const usuario = await this.prismaService.usuario.create({
-      data: {
-        nome,
-        email,
-        senha,
-        ultimoLogin: new Date(),
-        created_at: new Date(),
-        estaLogado: false,
-      },
-    });
+    try {
+      const usuario = await this.prismaService.usuario.create({
+        data: {
+          nome: nome.toLowerCase(),
+          email: email.toLowerCase(),
+          senha: senha.toLowerCase(),
+          posto_id,
+          empresa_id,
+          ultimoLogin: new Date(),
+          created_at: moment().add(-3, 'hours').toDate(),
+          estaLogado: false,
+        },
+      });
+      
+      // await this.mailService.enviarEmailUsuarioCriado(usuario);
 
-    return usuario;
+      return usuario;
+    } catch (error) {
+      throw new BadRequestException();
+    }
   }
 
-  public async findAll() {
-    const usuarios = await this.prismaService.usuario.findMany();
+  public async findAll(empresa_id: number) {
+    const usuarios = await this.prismaService.usuario.findMany({
+      where: {
+        empresa_id
+      }
+    });
 
     return usuarios;
   }

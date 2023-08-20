@@ -26,7 +26,6 @@ export class OcorrenciaService {
         });
       return createOcorrencia;
     } catch (error) {
-      console.log(error);
       throw new BadRequestException('Não foi possível salvar a ocorrência');
     }
   }
@@ -41,7 +40,6 @@ export class OcorrenciaService {
 
       return occorrencias;
     } catch (error) {
-      console.log(error);
       return error;
     }
   }

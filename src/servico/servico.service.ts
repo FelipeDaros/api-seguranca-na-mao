@@ -4,12 +4,14 @@ import { UpdateServicoDto } from './dto/update-servico.dto';
 import { PrismaService } from 'src/prisma.service';
 import { ChecklistService } from 'src/checklist/checklist.service';
 import { Servico } from '@prisma/client';
+import { EquipamentosPostoService } from 'src/equipamentos-posto/equipamentos-posto.service';
 
 @Injectable()
 export class ServicoService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly checklistService: ChecklistService,
+    private readonly equipamentosPosto: EquipamentosPostoService
   ) {}
   public async create({
     empresa_id,
@@ -25,13 +27,6 @@ export class ServicoService {
         usuario_id,
         relatorioLido: relatorio_lido,
       },
-    });
-
-    await this.checklistService.create({
-      equipamentos_post_id,
-      posto_id,
-      servico_id: servico.id,
-      usuario_id,
     });
 
     const servicoCriado = {
@@ -60,42 +55,6 @@ export class ServicoService {
     });
 
     return servicos;
-  }
-
-  public async buscarRelatorioUltimoVigilanteDoPosto(posto_id: number) {
-    const servico = await this.prismaService.servico.findFirst({
-      where: {
-        posto_id,
-      },
-      orderBy: {
-        id: 'desc',
-      },
-    });
-
-    if (!servico) {
-      throw new BadRequestException('Não foi localizado o último serviço');
-    }
-
-    const buscarEquipametosDoSerico =
-      await this.prismaService.checklist.findMany({
-        where: {
-          servico_id: servico.id,
-        },
-        include: {
-          EquipamentosPosto: {
-            include: {
-              Equipamentos: true,
-            },
-          },
-        },
-      });
-
-    const relatorio = {
-      servico,
-      buscarEquipametosDoSerico,
-    };
-
-    return relatorio;
   }
 
   public async findOne(id: number) {

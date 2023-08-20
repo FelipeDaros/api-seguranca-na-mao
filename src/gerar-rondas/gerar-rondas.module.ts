@@ -5,6 +5,7 @@ import { PrismaService } from 'src/prisma.service';
 
 @Module({
   controllers: [GerarRondasController],
-  providers: [GerarRondasService, PrismaService]
+  providers: [GerarRondasService, PrismaService],
+  exports: [GerarRondasService]
 })
 export class GerarRondasModule {}

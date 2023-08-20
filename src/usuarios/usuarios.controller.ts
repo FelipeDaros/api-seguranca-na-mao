@@ -15,16 +15,16 @@ import { AuthGuard } from '@nestjs/passport';
 
 @Controller('usuarios')
 export class UsuariosController {
-  constructor(private readonly usuariosService: UsuariosService) {}
+  constructor(private readonly usuariosService: UsuariosService) { }
 
   @Post()
   public async create(@Body() createUsuarioDto: CreateUsuarioDto) {
     return this.usuariosService.create(createUsuarioDto);
   }
 
-  @Get()
-  public async findAll() {
-    return this.usuariosService.findAll();
+  @Get(':id')
+  public async findAll(@Param('id') id: string) {
+    return this.usuariosService.findAll(+id);
   }
 
   @Get(':id')

@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreatePanicoDto } from './dto/create-panico.dto';
 import { Panico } from '@prisma/client';
+import * as moment from 'moment';
+
 
 @Injectable()
 export class PanicoService {
@@ -15,6 +17,7 @@ export class PanicoService {
       data: {
         usuario_id,
         verificado,
+        created_at: moment().add(-3, 'hours').toDate()
       },
     });
 

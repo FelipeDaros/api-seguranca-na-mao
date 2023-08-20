@@ -14,6 +14,9 @@ import { PontoModule } from './ponto/ponto.module';
 import { OcorrenciaModule } from './ocorrencia/ocorrencia.module';
 import { AuthModule } from './auth/auth.module';
 import { GerarRondasModule } from './gerar-rondas/gerar-rondas.module';
+import { MailModule } from './mail/mail.module';
+import { JobsModule } from './jobs/jobs.module';
+import { AlertaModule } from './alerta/alerta.module';
 
 @Module({
   imports: [
@@ -29,6 +32,9 @@ import { GerarRondasModule } from './gerar-rondas/gerar-rondas.module';
     OcorrenciaModule,
     AuthModule,
     GerarRondasModule,
+    MailModule,
+    JobsModule,
+    AlertaModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

@@ -25,6 +25,7 @@ model Usuario {
   ultimoLogin        DateTime             @map("ultimo_login")
   estaLogado         Boolean              @map("esta_logado")
   empresa_id         Int?
+  ultima_ronda       DateTime?
   Panico             Panico[]
   Servico            Servico[]
   RegistroOcorrencia RegistroOcorrencia[]
