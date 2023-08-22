@@ -105,7 +105,7 @@ model Ponto {
   longitude Float
   Posto     Posto? @relation(fields: [posto_id], references: [id])
   posto_id  Int
-
+  caminho_foto_qrcode String?
   created_at  DateTime      @default(now())
   updated_at  DateTime?
   GerarRondas GerarRondas[]

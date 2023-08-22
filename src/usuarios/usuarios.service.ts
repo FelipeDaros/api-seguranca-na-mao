@@ -10,14 +10,14 @@ import * as moment from 'moment';
 export class UsuariosService {
   constructor(private readonly prismaService: PrismaService, private readonly mailService: MailService) { }
 
-  public async create({ email, nome, senha, posto_id, empresa_id }: CreateUsuarioDto) {
+  public async create(user: CreateUsuarioDto) {
     const usuarioExiste = await this.prismaService.usuario.findFirst({
       where: {
-        email,
+        email: user.email,
       },
     });
 
-    if(!emailRegex(email)){
+    if(!emailRegex(user.email)){
       throw new BadRequestException('O endereço de email fornecido não é válido');
     }
 
@@ -28,22 +28,22 @@ export class UsuariosService {
     try {
       const usuario = await this.prismaService.usuario.create({
         data: {
-          nome: nome.toLowerCase(),
-          email: email.toLowerCase(),
-          senha: senha.toLowerCase(),
-          posto_id,
-          empresa_id,
+          nome: user.email.toLowerCase(),
+          email: user.email.toLowerCase(),
+          senha: user.senha.toLowerCase(),
+          posto_id: user.posto_id,
+          empresa_id: user.empresa_id,
           ultimoLogin: new Date(),
           created_at: moment().add(-3, 'hours').toDate(),
           estaLogado: false,
         },
       });
       
-      // await this.mailService.enviarEmailUsuarioCriado(usuario);
+      await this.mailService.enviarEmailUsuarioCriado(user);
 
       return usuario;
     } catch (error) {
-      throw new BadRequestException();
+      throw new BadRequestException(error);
     }
   }
 

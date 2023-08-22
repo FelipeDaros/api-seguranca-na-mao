@@ -12,10 +12,11 @@ import * as moment from 'moment';
 @Injectable()
 export class PontoService {
   constructor(private readonly prismaService: PrismaService, private readonly mailService: MailService) { }
-  public async create({ latitude, longitude, nome, posto_id }: CreatePontoDto) {
+  public async create({ latitude, longitude, nome, posto_id, email }: CreatePontoDto) {
+    const nomePontoLowwerCase = nome.toLowerCase();
     const pontoExistente = await this.prismaService.ponto.findFirst({
       where: {
-        nome: nome.toLowerCase(),
+        nome: nomePontoLowwerCase,
         posto_id,
       },
     });
@@ -24,8 +25,21 @@ export class PontoService {
       throw new BadRequestException('Ponto existente no posto.');
     }
 
+    await this.gerarQRCode(nomePontoLowwerCase);
+
+    const caminhoDaFoto = `./src/qrcode/${nome.toLowerCase()}.png`;
+
+    await this.mailService.enviarEmailPontoCriado(caminhoDaFoto, nome.toLowerCase(), email);
+
     const ponto = await this.prismaService.ponto.create({
-      data: { latitude, longitude, nome: nome.toLowerCase(), posto_id, created_at: moment().add(-3, 'hours').toDate() },
+      data: {
+        latitude,
+        longitude,
+        nome: nome.toLowerCase(),
+        posto_id,
+        created_at: moment().add(-3, 'hours').toDate(),
+        caminho_foto_qrcode: caminhoDaFoto
+      },
     });
 
     return ponto;
@@ -49,19 +63,24 @@ export class PontoService {
     }
 
     // Gerar e salvar a imagem do QR Code
-    const { data } = await this.gerarQRCode(nome);
+    await this.gerarQRCode(nome);
 
     // Gerar o PDF com o QR Code
     const pdfBuffer: Buffer = await this.gerarPDFComQRCode(nome);
-
-    await this.mailService.enviarEmailPontoCriado(data);
 
     return pdfBuffer;
   }
 
   private async gerarQRCode(nome: string): Promise<any> {
     try {
-      const foto = await QRCODE.toFile(`./src/qrcode/${nome}.png`, nome);
+
+      const folderName = './src/qrcode/';
+
+      if (!fs.existsSync(folderName)) {
+        fs.mkdirSync(folderName);
+      }
+      
+      const foto = await QRCODE.toFile(`./src/qrcode/${nome}.png`, nome, { width: 600 });
       return foto;
     } catch (err) {
       throw new Error('Erro ao gerar o código QR: ' + err.message);

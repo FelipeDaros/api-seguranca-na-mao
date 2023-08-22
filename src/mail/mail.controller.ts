@@ -5,8 +5,8 @@ import { MailService } from './mail.service';
 export class MailController {
   constructor(private readonly mailService: MailService) { }
 
-  @Post()
-  public async enviarEmailPontoCriado(): Promise<void> {
-    return await this.mailService.enviarEmailPontoCriado();
-  }
+  // @Post()
+  // public async enviarEmailPontoCriado(): Promise<void> {
+  //   return await this.mailService.enviarEmailPontoCriado();
+  // }
 }

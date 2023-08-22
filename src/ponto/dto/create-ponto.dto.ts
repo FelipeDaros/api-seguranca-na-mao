@@ -3,4 +3,5 @@ export class CreatePontoDto {
   latitude: number;
   longitude: number;
   posto_id: number;
+  email: string;
 }

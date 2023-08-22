@@ -9,12 +9,12 @@ import { PrismaService } from 'src/prisma.service';
   imports: [
     MailerModule.forRoot({
       transport: {
-        host: "smtp.gmail.com",
-        port: 465,
+        host: process.env.STMP_EMAIL,
+        port: Number(process.env.SMTP_PORT),
         secure: true,
         auth: {
-          user: "segurancanamao@gmail.com",
-          pass: "@@Galax2413"
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASSWORD
         }
       }
     })
