@@ -1,6 +1,6 @@
-import { Controller, Param, Post } from '@nestjs/common';
+import { Controller, Get, Param, Post } from '@nestjs/common';
 import { AlertaService } from './alerta.service';
-import { Alerta } from '@prisma/client';
+import { Alerta, GerarRondas } from '@prisma/client';
 
 @Controller('alerta')
 export class AlertaController {
@@ -12,4 +12,12 @@ export class AlertaController {
 
     return alerta;
   }
+
+  @Get(':usuario_id')
+  public async buscarRondasEmAbertoUsuarioAntesDeEmitirAlerta(@Param('usuario_id') usuario_id: string): Promise<GerarRondas[]>{
+    const rondas = await this.alertaService.buscarRondasEmAbertoUsuarioAntesDeEmitirAlerta(usuario_id);
+
+    return rondas;
+  }
+  
 }

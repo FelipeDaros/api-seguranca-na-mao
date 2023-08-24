@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Put,
 } from '@nestjs/common';
 import { UsuariosService } from './usuarios.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
@@ -43,5 +44,10 @@ export class UsuariosController {
   @Delete(':id')
   public async remove(@Param('id') id: string) {
     return this.usuariosService.remove(id);
+  }
+
+  @Put('adicionar-hora-alerta/:id')
+  public async remadicionarHoraAlertAoUsuarioove(@Param('id') id: string): Promise<void> {
+    return this.usuariosService.adicionarHoraAlertAoUsuario(id);
   }
 }

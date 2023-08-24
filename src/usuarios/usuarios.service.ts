@@ -17,7 +17,7 @@ export class UsuariosService {
       },
     });
 
-    if(!emailRegex(user.email)){
+    if (!emailRegex(user.email)) {
       throw new BadRequestException('O endereço de email fornecido não é válido');
     }
 
@@ -36,9 +36,10 @@ export class UsuariosService {
           ultimoLogin: new Date(),
           created_at: moment().add(-3, 'hours').toDate(),
           estaLogado: false,
+          tipo_usuario: user.tipo_usuario.toUpperCase()
         },
       });
-      
+
       await this.mailService.enviarEmailUsuarioCriado(user);
 
       return usuario;
@@ -92,6 +93,29 @@ export class UsuariosService {
       where: {
         id,
       },
+    });
+
+    return;
+  }
+
+  public async adicionarHoraAlertAoUsuario(id: string): Promise<void> {
+    const user = await this.prismaService.usuario.findUnique({
+      where: {
+        id
+      }
+    });
+
+    if (!user) {
+      throw new BadRequestException('Usuário não encontrado!');
+    }
+
+    user.horario_alerta = moment().add(-3, 'hours').toDate();
+
+    await this.prismaService.usuario.update({
+      where: {
+        id
+      },
+      data: user
     });
 
     return;

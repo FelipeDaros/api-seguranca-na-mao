@@ -7,4 +7,5 @@ export class CreateUsuarioDto {
   posto_id: number;
   empresa_id: number;
   email_responsavel: string;
+  tipo_usuario: string;
 }

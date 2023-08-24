@@ -26,6 +26,8 @@ model Usuario {
   estaLogado         Boolean              @map("esta_logado")
   empresa_id         Int?
   ultima_ronda       DateTime?
+  horario_alerta     DateTime?
+  tipo_usuario       String?
   Panico             Panico[]
   Servico            Servico[]
   RegistroOcorrencia RegistroOcorrencia[]

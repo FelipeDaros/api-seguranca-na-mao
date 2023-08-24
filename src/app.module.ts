@@ -17,6 +17,8 @@ import { GerarRondasModule } from './gerar-rondas/gerar-rondas.module';
 import { MailModule } from './mail/mail.module';
 import { JobsModule } from './jobs/jobs.module';
 import { AlertaModule } from './alerta/alerta.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { PushNotificationsModule } from './push-notifications/push-notifications.module';
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { AlertaModule } from './alerta/alerta.module';
     MailModule,
     JobsModule,
     AlertaModule,
+    ScheduleModule.forRoot(),
+    PushNotificationsModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

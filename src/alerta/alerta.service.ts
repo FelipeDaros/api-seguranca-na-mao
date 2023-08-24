@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Alerta } from '@prisma/client';
+import { Alerta, GerarRondas } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import * as momentTime from 'moment-timezone';
 import 'moment/locale/pt-br';
@@ -81,5 +81,14 @@ export class AlertaService {
         }
     }
     
+    public async buscarRondasEmAbertoUsuarioAntesDeEmitirAlerta(usuario_id: string): Promise<GerarRondas[]>{
+        const rondas = await this.prismaService.gerarRondas.findMany({
+            where: {
+                verificado: false,
+                usuario_id
+            }
+        });
 
+        return rondas;
+    }
 }
