@@ -43,7 +43,8 @@ export class UsuariosService {
       await this.mailService.enviarEmailUsuarioCriado(user);
 
       return usuario;
-    } catch (error) {
+    } catch (error: any) {
+      console.log(error);
       throw new BadRequestException(error);
     }
   }
