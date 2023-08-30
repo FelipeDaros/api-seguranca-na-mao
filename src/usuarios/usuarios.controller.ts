@@ -28,12 +28,12 @@ export class UsuariosController {
     return this.usuariosService.findAll(+id);
   }
 
-  @Get(':id')
+  @Get('/find/:id')
   public async findOne(@Param('id') id: string) {
     return this.usuariosService.findOne(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   public async update(
     @Param('id') id: string,
     @Body() updateUsuarioDto: UpdateUsuarioDto,

@@ -19,6 +19,7 @@ import { JobsModule } from './jobs/jobs.module';
 import { AlertaModule } from './alerta/alerta.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { PushNotificationsModule } from './push-notifications/push-notifications.module';
+import { ImportAppModule } from './import-app/import-app.module';
 
 @Module({
   imports: [
@@ -38,7 +39,8 @@ import { PushNotificationsModule } from './push-notifications/push-notifications
     JobsModule,
     AlertaModule,
     ScheduleModule.forRoot(),
-    PushNotificationsModule
+    PushNotificationsModule,
+    ImportAppModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

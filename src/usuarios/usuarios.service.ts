@@ -1,10 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { PrismaService } from 'src/prisma.service';
 import { MailService } from 'src/mail/mail.service';
 import { emailRegex } from 'src/utils/emailRegex';
 import * as moment from 'moment';
+import { Usuario } from '@prisma/client';
 
 @Injectable()
 export class UsuariosService {
@@ -17,7 +18,7 @@ export class UsuariosService {
       },
     });
 
-    if (!emailRegex(user.email)) {
+    if (!emailRegex(user.email.trim())) {
       throw new BadRequestException('O endereço de email fornecido não é válido');
     }
 
@@ -26,10 +27,10 @@ export class UsuariosService {
     }
 
     try {
-      const usuario = await this.prismaService.usuario.create({
+      const usuario = await !this.prismaService.usuario.create({
         data: {
           nome: user.email.toLowerCase(),
-          email: user.email.toLowerCase(),
+          email: user.email.toLowerCase().trim(),
           senha: user.senha.toLowerCase(),
           posto_id: user.posto_id,
           empresa_id: user.empresa_id,
@@ -45,7 +46,7 @@ export class UsuariosService {
       return usuario;
     } catch (error: any) {
       console.log(error);
-      throw new BadRequestException(error);
+      throw new BadRequestException('Erro ao cadastrar usuário', { cause: new Error(), description: error });
     }
   }
 
@@ -66,15 +67,32 @@ export class UsuariosService {
       },
     });
     if (!usuario) {
-      throw new BadRequestException(
-        'Não foi possível encontrar o usuário com esse id',
-      );
+      throw new NotFoundException('Não foi possível encontrar o usuário com esse id', { cause: new Error(), description: 'Não foi possível encontrar o usuário com esse id' });
     }
     return usuario;
   }
 
-  update(id: string, updateUsuarioDto: UpdateUsuarioDto) {
-    return `This action updates a #${id} usuario`;
+  public async update(id: string, updateUsuarioDto: UpdateUsuarioDto): Promise<Usuario> {
+    try {
+      let user = await this.findOne(id);
+
+      user = {
+        ...user,
+        ...updateUsuarioDto
+      }
+
+      await this.prismaService.usuario.update({
+        where: {
+          id
+        },
+        data: user
+      });
+
+      return user;
+    } catch (error) {
+      console.log(error)
+      throw new NotFoundException('Erro ao atualizar o usuário', { cause: new Error(), description: error });
+    }
   }
 
   public async remove(id: string): Promise<void> {

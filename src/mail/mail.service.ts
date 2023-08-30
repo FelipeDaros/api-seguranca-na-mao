@@ -41,7 +41,8 @@ export class MailService {
       })
       return;
     } catch (error) {
-      throw new BadRequestException("Erro ao enviar email");
+      console.log(error)
+      throw new BadRequestException('Erro ao enviar o email', { cause: new Error(), description: error });
     }
   }
 }
