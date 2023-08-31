@@ -38,10 +38,10 @@ export class AlertaService {
             });
 
             if(ultimaRondaUsuario.length){
-                throw new BadRequestException('Você possui rondas em aberto. Para prosseguir, finalize-as.')
+                throw new BadRequestException('Você possui rondas em aberto. Para prosseguir, finalize-as.', { cause: new Error(), description: 'Você possui rondas em aberto. Para prosseguir, finalize-as.' });
             }
 
-            const ultimaRondaHaUmaHoraAtras = momentTime(agora).diff(usuario?.ultima_ronda, 'minutes');
+            let ultimaRondaHaUmaHoraAtras = momentTime(agora).diff(usuario?.ultima_ronda, 'minutes');
     
             ultimosAlertas.forEach(item => {
                 const diffEmMinutos = momentTime(agora).diff(momentTime(item.created_at).toDate(), 'minutes');
@@ -54,8 +54,13 @@ export class AlertaService {
             if (countAlertasRecentes >= 3) {
                 gerarRondas = true;
             }
-            
+
+            if(!ultimaRondaHaUmaHoraAtras){
+                ultimaRondaHaUmaHoraAtras = 60;
+            }
+
             if(gerarRondas && ultimaRondaHaUmaHoraAtras >= 60){
+                
                 await this.gerarRondasService.create(usuario_id);
 
                 usuario.ultima_ronda = momentTime().add(-3, 'hours').toDate();
