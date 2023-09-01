@@ -29,7 +29,7 @@ export class UsuariosService {
     try {
       const usuario = await this.prismaService.usuario.create({
         data: {
-          nome: user.email.toLowerCase(),
+          nome: user.nome.toLowerCase(),
           email: user.email.toLowerCase().trim(),
           senha: user.senha.toLowerCase(),
           posto_id: user.posto_id,
