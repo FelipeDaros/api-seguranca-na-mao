@@ -24,7 +24,7 @@ export class AlertaService {
                 }
             });
     
-            const ultimaRondaUsuario = await this.prismaService.gerarRondas.findMany({
+            const validarRondasEmAberto = await this.prismaService.gerarRondas.findMany({
                 where: {
                     usuario_id,
                     verificado: false
@@ -37,7 +37,7 @@ export class AlertaService {
                 }
             });
 
-            if(ultimaRondaUsuario.length){
+            if(validarRondasEmAberto.length){
                 throw new BadRequestException('Você possui rondas em aberto. Para prosseguir, finalize-as.', { cause: new Error(), description: 'Você possui rondas em aberto. Para prosseguir, finalize-as.' });
             }
 
@@ -55,15 +55,14 @@ export class AlertaService {
                 gerarRondas = true;
             }
 
-            if(!ultimaRondaHaUmaHoraAtras){
+            if(!ultimaRondaHaUmaHoraAtras && ultimaRondaHaUmaHoraAtras !== 0){
                 ultimaRondaHaUmaHoraAtras = 60;
             }
 
             if(gerarRondas && ultimaRondaHaUmaHoraAtras >= 60){
-                
                 await this.gerarRondasService.create(usuario_id);
 
-                usuario.ultima_ronda = momentTime().add(-3, 'hours').toDate();
+                usuario.ultima_ronda = agora;
 
                 await this.prismaService.usuario.update({
                     data: usuario,
