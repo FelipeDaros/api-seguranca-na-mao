@@ -1,5 +1,10 @@
 import { randomUUID } from 'crypto';
 import { diskStorage } from 'multer';
+import * as fs from 'fs';
+
+if (!fs.existsSync('uploads/')) {
+  fs.mkdirSync('uploads/');
+}
 
 export const multerConfig = {
   storage: diskStorage({
