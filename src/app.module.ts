@@ -20,6 +20,8 @@ import { AlertaModule } from './alerta/alerta.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { PushNotificationsModule } from './push-notifications/push-notifications.module';
 import { ImportAppModule } from './import-app/import-app.module';
+import { FilesModule } from './files/files.module';
+import { ConfiguracoesModule } from './configuracoes/configuracoes.module';
 
 @Module({
   imports: [
@@ -40,7 +42,9 @@ import { ImportAppModule } from './import-app/import-app.module';
     AlertaModule,
     ScheduleModule.forRoot(),
     PushNotificationsModule,
-    ImportAppModule
+    ImportAppModule,
+    FilesModule,
+    ConfiguracoesModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

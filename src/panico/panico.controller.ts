@@ -16,6 +16,11 @@ export class PanicoController {
     return await this.panicoService.findAll();
   }
 
+  @Get('empresa/:id')
+  public async findAllEmpresa(@Param('id') id: string): Promise<Panico[]> {
+    return await this.panicoService.findAllEmpresa(+id);
+  }
+
   @Put(':id')
   public async update(@Param('id') id: string) {
     return await this.panicoService.update(+id);

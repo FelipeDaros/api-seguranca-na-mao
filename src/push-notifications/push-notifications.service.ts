@@ -69,4 +69,25 @@ export class PushNotificationsService {
 
         return;
     }
+
+    public async sendNotificationsRondasCreated(usuario: Usuario): Promise<void> {
+        const filters = [
+            {
+                field: 'tag',
+                key: usuario.id,
+                relation: '=',
+                value: usuario.id,
+            },
+        ];
+
+        await this.client.createNotification({
+            headings: { en: 'Suas rondas foram criadas!!!' },
+            contents: {
+                en: 'Você já pode efetuar suas rondas!! Elas acabaram de ser geradas!!',
+            },
+            filters: filters,
+        });
+
+        return;
+    }
 }

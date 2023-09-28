@@ -2,10 +2,9 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-1.1.x"]
 }
-
 
 datasource db {
   provider = "postgresql"
@@ -34,6 +33,7 @@ model Usuario {
   Checklist          Checklist[]
   GerarRondas        GerarRondas[]
   Alerta             Alerta[]
+  Configuracoes      Configuracoes[]
 
   @@map("usuario")
 }
@@ -45,6 +45,7 @@ model Empresa {
   estado  String
   Servico Servico[]
   Posto   Posto[]
+  Panico  Panico[]
 
   @@map("empresa")
 }
@@ -90,9 +91,13 @@ model Equipamentos {
 }
 
 model Panico {
-  id         Int       @id @default(autoincrement())
-  User       Usuario?  @relation(fields: [usuario_id], references: [id])
+  id         Int      @id @default(autoincrement())
+  User       Usuario? @relation(fields: [usuario_id], references: [id])
   usuario_id String
+
+  Empresa    Empresa? @relation(fields: [empresa_id], references: [id])
+  empresa_id Int?
+
   verificado Boolean
   created_at DateTime  @default(now())
   updated_at DateTime?
@@ -101,16 +106,16 @@ model Panico {
 }
 
 model Ponto {
-  id        Int    @id @default(autoincrement())
-  nome      String
-  latitude  Float
-  longitude Float
-  Posto     Posto? @relation(fields: [posto_id], references: [id])
-  posto_id  Int
+  id                  Int           @id @default(autoincrement())
+  nome                String
+  latitude            Float
+  longitude           Float
+  Posto               Posto?        @relation(fields: [posto_id], references: [id])
+  posto_id            Int
   caminho_foto_qrcode String?
-  created_at  DateTime      @default(now())
-  updated_at  DateTime?
-  GerarRondas GerarRondas[]
+  created_at          DateTime      @default(now())
+  updated_at          DateTime?
+  GerarRondas         GerarRondas[]
 
   @@map("ponto")
 }
@@ -132,7 +137,8 @@ model RegistroOcorrencia {
 
 model FotosOcorrencia {
   id                     Int                 @id @default(autoincrement())
-  nomeArquivo            String              @map("nome_arquivo")
+  nomeArquivo            String?             @map("nome_arquivo")
+  base64                 String?
   RegistroOcorrencia     RegistroOcorrencia? @relation(fields: [registro_ocorrencia_id], references: [id])
   registro_ocorrencia_id Int
   url                    String
@@ -198,4 +204,16 @@ model Servico {
   Checklist     Checklist[]
 
   @@map("servico")
+}
+
+model Configuracoes {
+  id         Int      @id @default(autoincrement())
+  tipo       String
+  User       Usuario? @relation(fields: [usuario_id], references: [id])
+  valor      Int
+  parametro  String?
+  usuario_id String
+  created_at DateTime @default(now())
+
+  @@map("configuracoes")
 }

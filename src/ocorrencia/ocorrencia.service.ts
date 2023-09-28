@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateOcorrenciaDto } from './dto/create-ocorrencia.dto';
+import { CreateOcorrenciaDto, Fotos } from './dto/create-ocorrencia.dto';
 import { UpdateOcorrenciaDto } from './dto/update-ocorrencia.dto';
 import { PrismaService } from 'src/prisma.service';
-
+import { randomUUID } from 'crypto';
 @Injectable()
 export class OcorrenciaService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -11,6 +11,7 @@ export class OcorrenciaService {
     descricao,
     usuario_id,
     titulo,
+    fotos
   }: CreateOcorrenciaDto) {
     try {
       const createOcorrencia =
@@ -24,6 +25,17 @@ export class OcorrenciaService {
             status: 'ABERTO',
           },
         });
+
+      fotos.forEach(async (foto: Fotos) => {
+        await this.prismaService.fotosOcorrencia.create({
+          data: {
+            nomeArquivo: randomUUID(),
+            registro_ocorrencia_id: createOcorrencia.id,
+            url: foto.base64,
+            base64: foto.base64
+          }
+        })
+      });   
       return createOcorrencia;
     } catch (error) {
       throw new BadRequestException('Não foi possível salvar a ocorrência');

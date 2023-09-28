@@ -39,4 +39,12 @@ export class PanicoService {
   public async findAll(): Promise<Panico[]> {
     return await this.prismaService.panico.findMany();
   }
+
+  public async findAllEmpresa(id: number): Promise<Panico[]>{
+    return await this.prismaService.panico.findMany({
+      where: {
+        empresa_id: id
+      }
+    })
+  }
 }

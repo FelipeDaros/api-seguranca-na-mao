@@ -11,4 +11,11 @@ export class JobsController {
   public async buscarRotasEmAberto() {
     await this.jobsService.buscarRotasEmAberto();
   }
+
+  @Cron(CronExpression.EVERY_5_MINUTES)
+  @Get('gerar-rondas')
+  public async gerarRondas() {
+    return await this.jobsService.gerarRondas();
+  }
+
 }
