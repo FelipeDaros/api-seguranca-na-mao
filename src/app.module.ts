@@ -22,6 +22,7 @@ import { PushNotificationsModule } from './push-notifications/push-notifications
 import { ImportAppModule } from './import-app/import-app.module';
 import { FilesModule } from './files/files.module';
 import { ConfiguracoesModule } from './configuracoes/configuracoes.module';
+import { RelatoriosModule } from './relatorios/relatorios.module';
 
 @Module({
   imports: [
@@ -44,7 +45,8 @@ import { ConfiguracoesModule } from './configuracoes/configuracoes.module';
     PushNotificationsModule,
     ImportAppModule,
     FilesModule,
-    ConfiguracoesModule
+    ConfiguracoesModule,
+    RelatoriosModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
