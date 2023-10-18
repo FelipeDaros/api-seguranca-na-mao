@@ -1,19 +1,12 @@
 import { IsBoolean, IsDate, IsDateString, IsEmpty, IsNumber, IsString } from "class-validator";
 
 export class RelatorioAlertaDto {
-
   @IsString()
-  usuario_id?: string;
-
-  @IsBoolean()
-  tudo: boolean;
-
-  @IsNumber()
-  empresa_id: number;
+  empresa_id: string;
 
   @IsDateString()
-  data_inicio: Date;
+  dataInicial: Date;
 
   @IsDateString()
-  data_final: Date;
+  dataFinal: Date;
 }
