@@ -21,7 +21,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new NotFoundException();
+      throw new NotFoundException("Usuário ou senha incorretos");
     }
 
     user.ultimoLogin = horarioAtualConfigurado();

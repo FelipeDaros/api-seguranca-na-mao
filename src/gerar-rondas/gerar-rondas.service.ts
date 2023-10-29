@@ -70,6 +70,7 @@ export class GerarRondasService {
     const rondaAlterada: GerarRondas = {
       ...rondaSelecionada,
       verificado: true,
+      isSincronized: true
     };
 
     if (moment().toDate() >= rondaAlterada.maximo_horario) {

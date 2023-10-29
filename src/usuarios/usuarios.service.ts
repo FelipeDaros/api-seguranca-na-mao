@@ -6,6 +6,7 @@ import { MailService } from 'src/mail/mail.service';
 import { emailRegex } from 'src/utils/emailRegex';
 import * as moment from 'moment';
 import { Usuario } from '@prisma/client';
+import { IUpdateUserHorarioAlerta } from './dto/update-horario-alerta';
 
 @Injectable()
 export class UsuariosService {
@@ -138,5 +139,28 @@ export class UsuariosService {
     });
 
     return;
+  }
+
+  public async updateHorarioAlerta({ id, horario_alerta }: IUpdateUserHorarioAlerta): Promise<void> {
+    try {
+      const user = await this.prismaService.usuario.findUnique({
+        where: {
+          id
+        }
+      });
+
+      user.horario_alerta = horario_alerta;
+
+      await this.prismaService.usuario.update({
+        data: user,
+        where: {
+          id
+        }
+      });
+
+      return;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 }

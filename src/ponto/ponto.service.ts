@@ -13,7 +13,8 @@ import * as moment from 'moment';
 export class PontoService {
   constructor(private readonly prismaService: PrismaService, private readonly mailService: MailService) { }
   public async create({ latitude, longitude, nome, posto_id, email }: CreatePontoDto) {
-    const nomePontoLowwerCase = nome.toLowerCase();
+    try {
+      const nomePontoLowwerCase = nome.toLowerCase();
     const pontoExistente = await this.prismaService.ponto.findFirst({
       where: {
         nome: nomePontoLowwerCase,
@@ -29,7 +30,7 @@ export class PontoService {
 
     const caminhoDaFoto = `./src/qrcode/${nome.toLowerCase()}.png`;
 
-    await this.mailService.enviarEmailPontoCriado(caminhoDaFoto, nome.toLowerCase(), email);
+    // await this.mailService.enviarEmailPontoCriado(caminhoDaFoto, nome.toLowerCase(), email);
 
     const ponto = await this.prismaService.ponto.create({
       data: {
@@ -43,6 +44,9 @@ export class PontoService {
     });
 
     return ponto;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   public async findAllWithPagination() {
