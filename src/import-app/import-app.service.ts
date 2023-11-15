@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Ponto } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
+import { SincronizarRondasAppDto } from './dto/sincronizar-rondas-app-dto';
 
 @Injectable()
 export class ImportAppService {
@@ -22,5 +23,23 @@ export class ImportAppService {
         }
 
         return pontos;
+    }
+
+
+    public async sincronizarRondas({ atrasado, maximo_horario, ponto_id, posto_id, user_id, verificado }: SincronizarRondasAppDto){
+        try {
+            await this.prismaService.gerarRondas.create({
+                data: {
+                    atrasado,
+                    ponto_id,
+                    posto_id,
+                    usuario_id: user_id,
+                    verificado,
+                    maximo_horario
+                }
+            });
+        } catch (error) {
+            throw new BadRequestException(error);
+        }
     }
 }

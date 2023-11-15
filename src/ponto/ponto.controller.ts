@@ -14,6 +14,7 @@ import { UpdatePontoDto } from './dto/update-ponto.dto';
 import * as fs from 'fs-extra';
 import * as PDFDocument from 'pdfkit';
 import * as QRCODE from 'qrcode';
+import { Ponto } from '@prisma/client';
 
 @Controller('ponto')
 export class PontoController {
@@ -60,5 +61,10 @@ export class PontoController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.pontoService.remove(+id);
+  }
+
+  @Get('/sincronizar/:posto_id')
+  public async sincronizarPontos(@Param('posto_id') posto_id: string): Promise<Ponto[]>{
+    return this.pontoService.sincronizarPontos(+posto_id);
   }
 }

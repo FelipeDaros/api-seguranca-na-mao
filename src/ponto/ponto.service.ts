@@ -7,6 +7,7 @@ import * as QRCODE from 'qrcode';
 import * as fs from 'fs-extra';
 import { MailService } from 'src/mail/mail.service';
 import * as moment from 'moment';
+import { Ponto } from '@prisma/client';
 
 
 @Injectable()
@@ -15,35 +16,35 @@ export class PontoService {
   public async create({ latitude, longitude, nome, posto_id, email }: CreatePontoDto) {
     try {
       const nomePontoLowwerCase = nome.toLowerCase();
-    const pontoExistente = await this.prismaService.ponto.findFirst({
-      where: {
-        nome: nomePontoLowwerCase,
-        posto_id,
-      },
-    });
+      const pontoExistente = await this.prismaService.ponto.findFirst({
+        where: {
+          nome: nomePontoLowwerCase,
+          posto_id,
+        },
+      });
 
-    if (pontoExistente) {
-      throw new BadRequestException('Ponto existente no posto.');
-    }
+      if (pontoExistente) {
+        throw new BadRequestException('Ponto existente no posto.');
+      }
 
-    await this.gerarQRCode(nomePontoLowwerCase);
+      await this.gerarQRCode(nomePontoLowwerCase);
 
-    const caminhoDaFoto = `./src/qrcode/${nome.toLowerCase()}.png`;
+      const caminhoDaFoto = `./src/qrcode/${nome.toLowerCase()}.png`;
 
-    // await this.mailService.enviarEmailPontoCriado(caminhoDaFoto, nome.toLowerCase(), email);
+      await this.mailService.enviarEmailPontoCriado(caminhoDaFoto, nome.toLowerCase(), email);
 
-    const ponto = await this.prismaService.ponto.create({
-      data: {
-        latitude,
-        longitude,
-        nome: nome.toLowerCase(),
-        posto_id,
-        created_at: moment().add(-3, 'hours').toDate(),
-        caminho_foto_qrcode: caminhoDaFoto
-      },
-    });
+      const ponto = await this.prismaService.ponto.create({
+        data: {
+          latitude,
+          longitude,
+          nome: nome.toLowerCase(),
+          posto_id,
+          created_at: moment().add(-3, 'hours').toDate(),
+          caminho_foto_qrcode: caminhoDaFoto
+        },
+      });
 
-    return ponto;
+      return ponto;
     } catch (error) {
       console.log(error);
     }
@@ -83,7 +84,7 @@ export class PontoService {
       if (!fs.existsSync(folderName)) {
         fs.mkdirSync(folderName);
       }
-      
+
       const foto = await QRCODE.toFile(`./src/qrcode/${nome}.png`, nome, { width: 600 });
       return foto;
     } catch (err) {
@@ -121,6 +122,20 @@ export class PontoService {
       });
       doc.end();
     });
+  }
+
+  public async sincronizarPontos(posto_id: number): Promise<Ponto[]> {
+    try {
+      const pontos = await this.prismaService.ponto.findMany({
+        where: {
+          posto_id
+        }
+      });
+
+      return pontos
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   public async findAll() {

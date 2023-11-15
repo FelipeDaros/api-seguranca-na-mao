@@ -14,6 +14,7 @@ import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { IUpdateUserHorarioAlerta } from './dto/update-horario-alerta';
+import { IUpdateUserHorarioRonda } from './dto/update-horario-ronda.dto';
 
 
 @Controller('usuarios')
@@ -57,4 +58,11 @@ export class UsuariosController {
   public async updateHorarioAlerta(@Body() updateUserHorarioAlerta: IUpdateUserHorarioAlerta) {
     return await this.usuariosService.updateHorarioAlerta(updateUserHorarioAlerta)
   }
+
+  @Post('update-horario-ronda')
+  public async updateHorarioRonda(@Body() updateUserHorarioAlerta: IUpdateUserHorarioRonda): Promise<void> {
+    return this.usuariosService.updateHorarioRonda(updateUserHorarioAlerta);
+  }
+
+  
 }
