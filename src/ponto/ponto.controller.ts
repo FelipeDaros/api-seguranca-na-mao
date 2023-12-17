@@ -11,9 +11,6 @@ import {
 import { PontoService } from './ponto.service';
 import { CreatePontoDto } from './dto/create-ponto.dto';
 import { UpdatePontoDto } from './dto/update-ponto.dto';
-import * as fs from 'fs-extra';
-import * as PDFDocument from 'pdfkit';
-import * as QRCODE from 'qrcode';
 import { Ponto } from '@prisma/client';
 
 @Controller('ponto')

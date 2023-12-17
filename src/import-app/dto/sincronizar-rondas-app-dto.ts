@@ -7,4 +7,6 @@ export class SincronizarRondasAppDto{
   posto_id: number;
   ponto_id: number;
   maximo_horario: Date;
+  cancelado: boolean;
+  motivo: string;
 }

@@ -26,7 +26,7 @@ export class ImportAppService {
     }
 
 
-    public async sincronizarRondas({ atrasado, maximo_horario, ponto_id, posto_id, user_id, verificado }: SincronizarRondasAppDto){
+    public async sincronizarRondas({ atrasado, maximo_horario, ponto_id, posto_id, user_id, verificado, cancelado, motivo }: SincronizarRondasAppDto){
         try {
             await this.prismaService.gerarRondas.create({
                 data: {
@@ -35,7 +35,9 @@ export class ImportAppService {
                     posto_id,
                     usuario_id: user_id,
                     verificado,
-                    maximo_horario
+                    maximo_horario,
+                    cancelado,
+                    motivo
                 }
             });
         } catch (error) {
