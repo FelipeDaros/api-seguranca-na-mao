@@ -31,8 +31,8 @@ export class EmpresaController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEmpresaDto: UpdateEmpresaDto) {
-    return this.empresaService.update(+id, updateEmpresaDto);
+  async update(@Param('id') id: string, @Body() updateEmpresaDto: UpdateEmpresaDto) {
+    return await this.empresaService.update(+id, updateEmpresaDto);
   }
 
   @Delete(':id')
