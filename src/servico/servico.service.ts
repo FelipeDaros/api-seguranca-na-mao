@@ -45,9 +45,6 @@ export class ServicoService {
             EquipamentosPosto: true
           }
         },
-        // Empresa: true,
-        // User: true,
-        // Posto: true,
       },
       orderBy: {
         id: 'desc',

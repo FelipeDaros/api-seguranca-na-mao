@@ -26,7 +26,7 @@ export class ImportAppService {
     }
 
 
-    public async sincronizarRondas({ atrasado, maximo_horario, ponto_id, posto_id, user_id, verificado, cancelado, motivo }: SincronizarRondasAppDto){
+    public async sincronizarRondas({ atrasado, maximo_horario, ponto_id, posto_id, user_id, verificado, cancelado, motivo }: SincronizarRondasAppDto) {
         try {
             await this.prismaService.gerarRondas.create({
                 data: {
@@ -42,6 +42,25 @@ export class ImportAppService {
             });
         } catch (error) {
             throw new BadRequestException(error);
+        }
+    }
+
+    public async finishDay(id: string) {
+        try {
+            const finishDay = await this.prismaService.usuario.findUnique({
+                where: {
+                    id
+                },
+                include: {
+                    Alerta: true,
+                    GerarRondas: true,
+                    Checklist: true
+                }
+            });
+
+            return finishDay
+        } catch (error) {
+
         }
     }
 }

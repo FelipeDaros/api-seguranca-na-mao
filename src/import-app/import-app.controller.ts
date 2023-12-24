@@ -16,4 +16,9 @@ export class ImportAppController {
   public sincronizarRondas(@Body() sincronizarRondasAppDto: SincronizarRondasAppDto){
     this.importAppService.sincronizarRondas(sincronizarRondasAppDto);
   }
+
+  @Get('/finish-day/:id')
+  public async finishDay(@Param('id') id: string){
+    return await this.importAppService.finishDay(id);
+  }
 }

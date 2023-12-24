@@ -10,6 +10,7 @@ export class PayloadUser {
   empresa_id: number;
   horario_alerta: Date;
   tipo_usuario: string;
+  isFinishDay: boolean;
 
   constructor(user: Usuario) {
     this.id = user.id;
@@ -21,5 +22,6 @@ export class PayloadUser {
     this.empresa_id = user.empresa_id;
     this.horario_alerta = user.horario_alerta;
     this.tipo_usuario = user.tipo_usuario;
+    this.isFinishDay = user.isFinishDay;
   }
 }

@@ -27,6 +27,7 @@ model Usuario {
   ultima_ronda       DateTime?
   horario_alerta     DateTime?
   tipo_usuario       String?
+  isFinishDay        Boolean              @default(false)
   Panico             Panico[]
   Servico            Servico[]
   RegistroOcorrencia RegistroOcorrencia[]
