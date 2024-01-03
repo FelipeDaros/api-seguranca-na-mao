@@ -42,4 +42,9 @@ export class ServicoController {
   remove(@Param('id') id: string) {
     return this.servicoService.remove(+id);
   }
+
+  @Get('/ultimo-servico/:posto_id')
+  public findLatestServicePost(@Param('posto_id') posto_id: string) {
+    return this.servicoService.findLatestServicePost(+posto_id);
+  }
 }

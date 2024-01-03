@@ -54,7 +54,6 @@ export class ImportAppService {
                 include: {
                     Alerta: true,
                     GerarRondas: true,
-                    Checklist: true
                 }
             });
 

@@ -13,16 +13,7 @@ export class ChecklistService {
     posto_id,
   }: CreateChecklistDto) {
     try {
-      for await (const equipamento of equipamentos_post_id) {
-        await this.prismaService.checklist.create({
-          data: {
-            equipamentos_post_id: equipamento,
-            servico_id,
-            usuario_id,
-            posto_id,
-          },
-        });
-      }
+
     } catch (error) {
       throw new BadRequestException(error.message);
     }

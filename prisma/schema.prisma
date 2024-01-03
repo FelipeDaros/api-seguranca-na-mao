@@ -31,7 +31,6 @@ model Usuario {
   Panico             Panico[]
   Servico            Servico[]
   RegistroOcorrencia RegistroOcorrencia[]
-  Checklist          Checklist[]
   GerarRondas        GerarRondas[]
   Alerta             Alerta[]
   Configuracoes      Configuracoes[]
@@ -61,7 +60,6 @@ model Posto {
   Servico           Servico[]
   Ponto             Ponto[]
   EquipamentosPosto EquipamentosPosto[]
-  Checklist         Checklist[]
   GerarRondas       GerarRondas[]
   Usuario           Usuario[]
 
@@ -75,18 +73,18 @@ model EquipamentosPosto {
   Posto          Posto?        @relation(fields: [posto_id], references: [id])
   posto_id       Int
 
-  created_at DateTime    @default(now())
-  Checklist  Checklist[]
+  created_at DateTime @default(now())
 
   @@map("equipamentos_posto")
 }
 
 model Equipamentos {
-  id                Int                 @id @default(autoincrement())
-  nome              String
-  created_at        DateTime            @default(now())
-  updated_at        DateTime?
-  EquipamentosPosto EquipamentosPosto[]
+  id                  Int                   @id @default(autoincrement())
+  nome                String
+  created_at          DateTime              @default(now())
+  updated_at          DateTime?
+  EquipamentosPosto   EquipamentosPosto[]
+  EquipamentosServico EquipamentosServico[]
 
   @@map("equipamentos")
 }
@@ -148,22 +146,6 @@ model FotosOcorrencia {
   @@map("fotos_ocorrencia")
 }
 
-model Checklist {
-  id         Int      @id @default(autoincrement())
-  User       Usuario? @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
-  usuario_id String
-  Servico    Servico? @relation(fields: [servico_id], references: [id])
-  servico_id Int?
-  Posto      Posto?   @relation(fields: [posto_id], references: [id])
-  posto_id   Int
-  created_at DateTime @default(now())
-
-  EquipamentosPosto    EquipamentosPosto? @relation(fields: [equipamentos_post_id], references: [id])
-  equipamentos_post_id Int?
-
-  @@map("checklist")
-}
-
 model GerarRondas {
   id             Int       @id @default(autoincrement())
   User           Usuario?  @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
@@ -206,10 +188,25 @@ model Servico {
   Posto    Posto? @relation(fields: [posto_id], references: [id])
   posto_id Int
 
-  relatorioLido Boolean?    @map("relatorio_lido")
-  Checklist     Checklist[]
+  relatorioLido Boolean? @map("relatorio_lido")
+
+  created_at          DateTime              @default(now())
+  EquipamentosServico EquipamentosServico[]
 
   @@map("servico")
+}
+
+model EquipamentosServico {
+  id             Int           @id @default(autoincrement())
+  Equipamentos   Equipamentos? @relation(fields: [equipamento_id], references: [id])
+  equipamento_id Int
+
+  Servico    Servico? @relation(fields: [servico_id], references: [id])
+  servico_id Int
+
+  created_at DateTime @default(now())
+
+  @@map("equipamentos_servico")
 }
 
 model Configuracoes {

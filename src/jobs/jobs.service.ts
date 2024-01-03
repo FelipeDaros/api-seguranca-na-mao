@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { GerarRondasService } from 'src/gerar-rondas/gerar-rondas.service';
 import { PrismaService } from 'src/prisma.service';
 import { PushNotificationsService } from 'src/push-notifications/push-notifications.service';
-import { forEach, uniq } from "ramda";
 import { addHorario, horarioAtual, horarioAtualConfigurado } from 'src/utils/datetime';
 import * as moment from 'moment';
 
@@ -24,8 +23,6 @@ export class JobsService {
             }
         });
         const usuarios = rondas.map(item => item.User);
-
-        await this.pushNotificationsService.sendNotificationsRondasEmAberto(uniq(usuarios));
 
         return rondas;
     }

@@ -10,15 +10,13 @@ import { EquipamentosPostoService } from 'src/equipamentos-posto/equipamentos-po
 export class ServicoService {
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly checklistService: ChecklistService,
-    private readonly equipamentosPosto: EquipamentosPostoService
   ) {}
   public async create({
     empresa_id,
     posto_id,
     relatorio_lido,
     usuario_id,
-    equipamentos_post_id,
+    equipamentos_id,
   }: CreateServicoDto): Promise<Servico> {
     const servico = await this.prismaService.servico.create({
       data: {
@@ -29,23 +27,11 @@ export class ServicoService {
       },
     });
 
-    const servicoCriado = {
-      ...servico,
-      equipamentos_post_id,
-    };
-
-    return servicoCriado;
+    return servico;
   }
 
   public async findAll(): Promise<Array<Servico>> {
     const servicos = await this.prismaService.servico.findMany({
-      include: {
-        Checklist: {
-          include: {
-            EquipamentosPosto: true
-          }
-        },
-      },
       orderBy: {
         id: 'desc',
       },
@@ -64,5 +50,47 @@ export class ServicoService {
 
   public async remove(id: number) {
     return `This action removes a #${id} servico`;
+  }
+
+  public async findLatestServicePost(posto_id: number): Promise<any> {
+    const servico = await this.prismaService.servico.findFirst({
+      where: {
+        posto_id
+      },
+      orderBy: {
+        id: 'desc'
+      },
+      include: {
+        Posto: {
+          select: {
+            nome: true,
+            id: true
+          }
+        },
+        User: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    });
+
+    if (!servico) {
+      return;
+    }
+
+    const equipamentos = await this.prismaService.equipamentosServico.findMany({
+      where: {
+        servico_id: servico.id
+      }
+    });
+
+    const servicoData = {
+      ...servico,
+      equipamentos
+    }
+
+    return servicoData;
   }
 }

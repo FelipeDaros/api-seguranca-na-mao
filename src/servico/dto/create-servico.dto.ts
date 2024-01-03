@@ -3,5 +3,5 @@ export class CreateServicoDto {
   empresa_id: number;
   posto_id: number;
   relatorio_lido: boolean;
-  equipamentos_post_id: number[];
+  equipamentos_id: number[];
 }
