@@ -5,6 +5,7 @@ import { PrismaService } from 'src/prisma.service';
 import { ChecklistService } from 'src/checklist/checklist.service';
 import { Servico } from '@prisma/client';
 import { EquipamentosPostoService } from 'src/equipamentos-posto/equipamentos-posto.service';
+import { horarioAtualConfigurado } from 'src/utils/datetime';
 
 @Injectable()
 export class ServicoService {
@@ -25,6 +26,16 @@ export class ServicoService {
         usuario_id,
         relatorioLido: relatorio_lido,
       },
+    });
+
+    equipamentos_id.forEach(async (id) => {
+      await this.prismaService.equipamentosServico.create({
+        data: {
+          servico_id: servico.id,
+          equipamento_id: id,
+          created_at: horarioAtualConfigurado()
+        }
+      });
     });
 
     return servico;
