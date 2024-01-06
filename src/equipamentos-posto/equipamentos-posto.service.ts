@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateEquipamentosPostoDto } from './dto/create-equipamentos-posto.dto';
 import { UpdateEquipamentosPostoDto } from './dto/update-equipamentos-posto.dto';
 import { PrismaService } from 'src/prisma.service';
+import { Equipamentos } from '@prisma/client';
 
 @Injectable()
 export class EquipamentosPostoService {
@@ -32,21 +33,25 @@ export class EquipamentosPostoService {
     }
   }
 
-  public async findAll(posto_id: number) {
+  public async findAll(posto_id: number): Promise<Equipamentos[]> {
     const equipamentosPosto =
       await this.prismaService.equipamentosPosto.findMany({
         where: {
           posto_id,
         },
-        include: { Equipamentos: {
-          select: {
-            id: true,
-            nome: true
-          }
-        } },
       });
 
-    return equipamentosPosto;
+    const ids = equipamentosPosto.map(item => item.equipamento_id);
+
+    const equipamentos = await this.prismaService.equipamentos.findMany({
+      where: {
+        id: {
+          in: ids
+          }
+        }
+      });
+
+    return equipamentos;
   }
 
   public async findOne(id: number) {
