@@ -91,9 +91,19 @@ export class ServicoService {
       return;
     }
 
-    const equipamentos = await this.prismaService.equipamentosServico.findMany({
+    const equipamentosServico = await this.prismaService.equipamentosServico.findMany({
       where: {
         servico_id: servico.id
+      }
+    });
+
+    const ids = equipamentosServico.map(item => item.equipamento_id);
+
+    const equipamentos = await this.prismaService.equipamentos.findMany({
+      where: {
+        id: {
+          in: ids
+        }
       }
     });
 

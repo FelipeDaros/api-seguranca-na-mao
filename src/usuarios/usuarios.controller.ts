@@ -64,5 +64,8 @@ export class UsuariosController {
     return this.usuariosService.updateHorarioRonda(updateUserHorarioAlerta);
   }
 
-  
+  @Put('update-status-logado/:id/:status')
+  public async updateStatusLogado(@Param('id') id: string, @Param('status') status: string): Promise<void> {
+    return this.usuariosService.updateStatusLogado(id, status);
+  }
 }

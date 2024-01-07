@@ -187,4 +187,27 @@ export class UsuariosService {
       throw new BadRequestException(error);
     }
   }
+
+  public async updateStatusLogado(id: string, status: string): Promise<void> {
+    try {
+      const user = await this.prismaService.usuario.findUnique({
+        where: {
+          id
+        }
+      });
+
+      user.status_logado = status.toUpperCase();
+
+      await this.prismaService.usuario.update({
+        data: user,
+        where: {
+          id
+        }
+      });
+
+      return;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
+  }
 }
