@@ -172,6 +172,9 @@ model Alerta {
   id         Int      @id @default(autoincrement())
   User       Usuario? @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
   usuario_id String
+
+  Servico    Servico? @relation(fields: [servico_id], references: [id])
+  servico_id Int
   created_at DateTime @default(now())
 
   @@map("alerta")
@@ -192,6 +195,7 @@ model Servico {
 
   created_at          DateTime              @default(now())
   EquipamentosServico EquipamentosServico[]
+  Alerta              Alerta[]
 
   @@map("servico")
 }

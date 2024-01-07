@@ -114,4 +114,40 @@ export class ServicoService {
 
     return servicoData;
   }
+
+  public async buscarInformacoesFinishDay(user_id: string){
+    const servico = await this.prismaService.servico.findFirst({
+      where: {
+        usuario_id: user_id
+      },
+      orderBy: {
+        id: 'desc'
+      }
+    });
+
+    const equipamentosServico = await this.prismaService.equipamentosServico.findMany({
+      where: {
+        servico_id: servico.id
+      }
+    });
+
+    const ids = equipamentosServico.map(item => item.equipamento_id);
+
+    const equipamentos = await this.prismaService.equipamentos.findMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    });
+
+    const alertas = await this.prismaService.alerta.findMany({
+      
+    });
+
+    const finishDayInfo = {
+      ...servico,
+      equipamentos
+    }
+  } 
 }

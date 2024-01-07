@@ -47,4 +47,10 @@ export class ServicoController {
   public findLatestServicePost(@Param('posto_id') posto_id: string) {
     return this.servicoService.findLatestServicePost(+posto_id);
   }
+
+  @Get('/buscar-informacoes-finishday/:user_id')
+  public buscarInformacoesFinishDay(@Param('user_id') user_id: string) {
+    return this.servicoService.buscarInformacoesFinishDay(user_id);
+  }
+
 }

@@ -12,6 +12,7 @@ export class PayloadUser {
   tipo_usuario: string;
   isFinishDay: boolean;
   status_logado: string;
+  posto_id: number;
   constructor(user: Usuario) {
     this.id = user.id;
     this.nome = user.nome;
@@ -23,5 +24,6 @@ export class PayloadUser {
     this.horario_alerta = user.horario_alerta;
     this.tipo_usuario = user.tipo_usuario;
     this.status_logado = user.status_logado;
+    this.posto_id = user.posto_id;
   }
 }
