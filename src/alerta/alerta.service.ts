@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Alerta, GerarRondas } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
-import * as momentTime from 'moment-timezone';
 import 'moment/locale/pt-br';
 import { GerarRondasService } from 'src/gerar-rondas/gerar-rondas.service';
 import { horarioAtualConfigurado } from 'src/utils/datetime';
@@ -10,11 +9,12 @@ import { horarioAtualConfigurado } from 'src/utils/datetime';
 export class AlertaService {
     constructor(private readonly prismaService: PrismaService, private readonly gerarRondasService: GerarRondasService) { }
 
-    public async create(usuario_id: string): Promise<Alerta> {
+    public async create(usuario_id: string, servico_id: number): Promise<Alerta> {
         try {
             const alerta = await this.prismaService.alerta.create({
                 data: {
                     usuario_id,
+                    servico_id,                
                     created_at: horarioAtualConfigurado()
                 }
             });

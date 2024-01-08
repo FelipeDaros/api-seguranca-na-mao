@@ -6,9 +6,9 @@ import { Alerta, GerarRondas } from '@prisma/client';
 export class AlertaController {
   constructor(private readonly alertaService: AlertaService) {}
 
-  @Post(':usuario_id')
-  public async create(@Param('usuario_id') usuario_id: string): Promise<Alerta>{
-    const alerta = await this.alertaService.create(usuario_id);
+  @Post('/:usuario_id/:servico_id')
+  public async create(@Param('usuario_id') usuario_id: string, @Param('servico_id') servico_id: string): Promise<Alerta> {
+    const alerta = await this.alertaService.create(usuario_id, +servico_id);
 
     return alerta;
   }

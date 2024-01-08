@@ -51,8 +51,17 @@ export class ServicoService {
     return servicos;
   }
 
-  public async findOne(id: number) {
-    return `This action returns a #${id} servico`;
+  public async findOne(usuario_id: string) {
+    const servico = await this.prismaService.servico.findFirst({
+      where: {
+        usuario_id
+      },
+      orderBy: {
+        id: `desc`
+      }
+    });
+
+    return servico;
   }
 
   public async update(id: number, updateServicoDto: UpdateServicoDto) {
@@ -142,12 +151,17 @@ export class ServicoService {
     });
 
     const alertas = await this.prismaService.alerta.findMany({
-      
+      where: {
+        servico_id: servico.id
+      }
     });
 
     const finishDayInfo = {
       ...servico,
-      equipamentos
+      equipamentos,
+      alertas
     }
+
+    return finishDayInfo;
   } 
 }

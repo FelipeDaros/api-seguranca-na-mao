@@ -28,9 +28,9 @@ export class ServicoController {
     return await this.servicoService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.servicoService.findOne(+id);
+  @Get(':usuario_id')
+  public async findOne(@Param('usuario_id') usuario_id: string) {
+    return await this.servicoService.findOne(usuario_id);
   }
 
   @Patch(':id')
